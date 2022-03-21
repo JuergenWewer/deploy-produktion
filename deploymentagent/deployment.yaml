@@ -18,8 +18,8 @@ spec:
         image: jw-cloud.org:8443/jw-gitops-deployer:latest
         env:
           - name: GITOPS_REPO
-            value: deploy-abnahme
+            value: deploy-produktion
           - name: GITOPS_REPO_URL
-            value: https://github.com/JuergenWewer/deploy-abnahme.git
+            value: https://github.com/JuergenWewer/deploy-produktion.git
       imagePullSecrets:
         - name: jwcloudcred
