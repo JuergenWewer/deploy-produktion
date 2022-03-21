@@ -1,6 +1,0 @@
-- name: install nfs clients
-  apt:
-    name: "{{ item }}"
-    state: present
-  with_items:
-    - nfs-common
