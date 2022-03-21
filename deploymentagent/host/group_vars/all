@@ -14,7 +14,7 @@ nfsserver: 10.0.1.51
 nfssecret: ssh-keys
 nfsbackup: false
 nfsprovisionerpath: /mnt/optimal/nfs-provisioner
-kubeconfig: kubeconfig: /tmp/deploy-produktion/deploymentagent/admin.conf
+kubeconfig: /tmp/deploy-produktion/deploymentagent/admin.conf
 dbpassword: optimalsystem
 keycloakpassword: optimalsystem
 keycloakdbpassword: optimalsystem
