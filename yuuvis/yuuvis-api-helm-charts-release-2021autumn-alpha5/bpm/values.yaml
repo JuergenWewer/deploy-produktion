@@ -1,0 +1,58 @@
+yuuvis:
+  image:
+    imagePullPolicy: Always
+    imagePullSecret: yuuvisorg
+  configservice:
+    url: http://configservice/config
+  livenessProbe:
+    enable: false
+    initialDelaySeconds: 300
+    periodSeconds: 30
+    timeoutSeconds: 10
+  readinessProbe:
+    enable: true
+    initialDelaySeconds: 0
+    periodSeconds: 30
+    timeoutSeconds: 5
+  bpm:
+    engine:
+      dockerImage: docker.yuuvis.org/yuuvis/bpm-engine:0.3.0-RC02
+      initContainerImage: docker.yuuvis.org/yuuvis/helper/init-helper:latest
+      profiles: postgres,swagger
+      instances: 1
+      java:
+        maxHeap: -Xmx128m
+      database:
+        # user and password used by the bpm service to access the desired database
+        name: themis
+        user: bpmusr
+        password: optimal
+        port: "5432"
+        address: postgresql.infrastructure
+        createdb: true
+        # for postgres systems the database an optional init job can be used to create 
+        # the database
+        # if createdb is 'true' 
+        # the following user is used to test if the database and user exists
+        # and if they dont exit, to create the database, the user and
+        # grand the user privileges for the database
+        # the privilege user must have the rights to create databases, users
+        # and grand privileges to users
+        privilege:
+          user: postgres
+          password: optimal
+    admin:
+      dockerImage: docker.yuuvis.org/yuuvis/bpm-admin:0.3.0-RC02
+      profiles: 
+      instances: 1
+      java:
+        maxHeap: -Xmx128m
+      serverConfigProcessServerAddress: http://bpm-engine
+      serverConfigCmmnServerAddress: http://bpm-engine
+      serverConfigDmnServerAddress: http://bpm-engine
+      serverConfigFormServerAddress: http://bpm-engine
+      serverConfigContentServerAddress: http://bpm-engine
+      serverConfigAppServerAddress: http://bpm-engine  
+       
+initContainer:
+  command: "until wget -q --spider http://configservice/manage/health; do echo waiting for configservice; sleep 11; done;"

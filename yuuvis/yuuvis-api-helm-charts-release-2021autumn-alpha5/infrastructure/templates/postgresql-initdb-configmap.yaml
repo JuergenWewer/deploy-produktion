@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: postgresql-initdb
+data:
+  create_enaio_dbs.sql: |
+    CREATE DATABASE yuuvis;
+    CREATE USER {{.Values.yuuvis.db.user}} WITH ENCRYPTED PASSWORD '{{.Values.yuuvis.db.password}}';
+    GRANT ALL PRIVILEGES ON DATABASE yuuvis TO {{.Values.yuuvis.db.user}};
+    CREATE DATABASE keycloak;
+    CREATE USER {{.Values.yuuvis.keycloak.db.user}} WITH ENCRYPTED PASSWORD '{{.Values.yuuvis.keycloak.db.password}}';
+    GRANT ALL PRIVILEGES ON DATABASE keycloak TO {{.Values.yuuvis.keycloak.db.user}};

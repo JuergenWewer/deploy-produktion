@@ -1,0 +1,12 @@
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: minio-csiraid-claim
+  namespace: infrastructure
+spec:
+  storageClassName: managed-nfs-raid-storage
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 10Gi

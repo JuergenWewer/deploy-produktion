@@ -1,0 +1,31 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: initclientconfig
+  labels:
+    app: client
+spec:
+  backoffLimit: 3
+  template:
+    spec:
+      containers:
+      - name: initclientconfig
+        image: docker.yuuvis.org/yuuvis/helper/init-helper:latest
+        imagePullPolicy: IfNotPresent
+        command: ['bash', '/yuuvis/script/init.bash']
+        volumeMounts:
+        - mountPath: /yuuvis/data
+          name: clientresources
+        - mountPath: /yuuvis/script/init.bash
+          name: initscript
+          subPath: clientgitinit.bash
+      imagePullSecrets:
+      - name:  {{.Values.yuuvis.image.imagePullSecret }}
+      volumes:
+      - configMap:
+          name: clientresources
+        name: clientresources
+      - configMap:
+          name: clientinit
+        name: initscript
+      restartPolicy: OnFailure

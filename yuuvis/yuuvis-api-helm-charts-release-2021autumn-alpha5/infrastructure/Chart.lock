@@ -1,0 +1,18 @@
+dependencies:
+- name: minio
+  repository: https://helm.min.io/
+  version: 8.0.10
+- name: keycloak
+  repository: https://codecentric.github.io/helm-charts/
+  version: ^9.5.0
+- name: redis
+  repository: https://charts.bitnami.com/bitnami
+  version: 11.3.4
+- name: postgresql
+  repository: https://charts.bitnami.com/bitnami
+  version: 9.8.12
+- name: rabbitmq
+  repository: https://charts.bitnami.com/bitnami
+  version: 7.8.0
+digest: sha256:1fc64dfa80ef0efe0b072b91e25c4dd72c70cf5af4a7c72b4a47da7c25a3b73c
+generated: "2021-08-19T15:58:43.8382203+02:00"
