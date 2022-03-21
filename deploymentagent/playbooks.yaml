@@ -1,0 +1,22 @@
+# Gets all the directories and stores all the return values of `find`
+# into the results_of_find
+# The return value will consist of:
+# https://docs.ansible.com/ansible/latest/modules/find_module.html#return-values
+- hosts: localhost
+  tasks:
+    - name: Get all dirs
+      find:
+        paths: /tmp/deploy-abnahme
+        file_type: directory
+      register: result_of_find
+
+    # We're interested only in the `files` part of results of find.
+    # In pseudo code what's happening here is:
+    #     for each item in result_of_find.files:
+    #         print item.path
+    #
+    # The output will be very verbose but for debugging purposes it can be filtered
+    # ansible-playbook action_per_dir.yml | grep msg
+    - name: Run the playbooks of all deployments
+      include_tasks: "{{ item.path }}/playbook/playbook.yaml"
+      with_items: "{{ result_of_find.files }}"

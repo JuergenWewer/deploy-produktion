@@ -1,0 +1,25 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: deployment-agent
+  namespace: kube-system
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: deployment-agent
+  template:
+    metadata:
+      labels:
+        app: deployment-agent
+    spec:
+      containers:
+      - name: deployment-agent
+        image: jw-cloud.org:8443/jw-gitops-deployer:latest
+        env:
+          - name: GITOPS_REPO
+            value: deploy-abnahme
+          - name: GITOPS_REPO_URL
+            value: https://github.com/JuergenWewer/deploy-abnahme.git
+      imagePullSecrets:
+        - name: jwcloudcred
