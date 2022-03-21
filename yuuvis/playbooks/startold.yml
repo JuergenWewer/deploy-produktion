@@ -1,0 +1,83 @@
+- hosts: master
+  tasks:
+    - name: Include task nfs dependencies
+      import_tasks: ./nfs/master.yaml
+
+- hosts: workers
+  tasks:
+    - name: Include task nfs dependencies
+      import_tasks: ./nfs/workers.yaml
+
+- hosts: localhost
+  tasks:
+    - name: create persistent volumes
+      shell: kubectl apply -f '{{ item }}'
+      args:
+        chdir: "{{ installdir }}"
+      with_lines: cat "{{ persistentvolumeslist }}"
+    - name: create nfs provisioner
+      community.kubernetes.helm:
+        name: nfsprovisioner
+        release_namespace: default
+        chart_ref: $HOME/workspace/yuuvis/nfs-provisioner
+        wait: true
+        values:
+          nfsProvisioner:
+            nfsServer:
+              ip: "{{ nfsserver }}"
+              path: "{{ nfsprovisionerpath }}"
+    - name: create infrastructure and waiting suppression ending
+      community.kubernetes.helm:
+        name: infrastructure
+        release_namespace: infrastructure
+        chart_ref: $HOME/workspace/yuuvis/infrastructure
+        create_namespace: true
+        wait: true
+        values:
+          yuuvis:
+            authentication:
+              ip: "{{ hostIP }}"
+    - name: create yuuvis and waiting suppression ending
+      community.kubernetes.helm:
+        name: yuuvis
+        release_namespace: yuuvis
+        chart_ref: $HOME/workspace/yuuvis/yuuvis
+        create_namespace: true
+        wait_timeout: "15m"
+        wait: true
+        values:
+          yuuvis:
+            keycloak:
+              # !!! Change before running
+              # this variable must contain the "public" ip of keycloak
+              # this ip will be sent to the user from the authentication service
+              #    address: 10.211.55.4:30111
+              address: "{{ keycloakAddress }}"
+#        values_files:
+#          - /custom-values.yaml
+    - name: create client and waiting suppression ending
+      community.kubernetes.helm:
+        name: client
+        release_namespace: yuuvis
+        chart_ref: $HOME/workspace/yuuvis/client
+        wait: true
+    - name: restart api
+      shell: kubectl rollout restart deployment api -n yuuvis
+    - name: create bpm and waiting suppression ending
+      community.kubernetes.helm:
+        name: bpm
+        release_namespace: yuuvis
+        chart_ref: $HOME/workspace/yuuvis/bpm
+        wait: true
+    - name: create rendition and waiting suppression ending
+      community.kubernetes.helm:
+        name: rendition
+        release_namespace: yuuvis
+        chart_ref: $HOME/workspace/yuuvis/rendition
+        wait: true
+    - name: create management and waiting suppression ending
+      community.kubernetes.helm:
+        name: management
+        release_namespace: yuuvis
+        chart_ref: $HOME/workspace/yuuvis/management
+        wait: true

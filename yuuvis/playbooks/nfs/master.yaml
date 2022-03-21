@@ -1,0 +1,49 @@
+- name: create directories to be mounted
+  become: true
+  file:
+    path: '{{ item }}'
+    state: directory
+    owner: root
+    group: root
+    mode: 0777
+  with_lines: cat "{{ mountdirs }}"
+
+- name: install nfs server
+  apt:
+    name: nfs-kernel-server
+    state: present
+    force: yes
+- name: stop nfs
+  become: true
+  shell: systemctl stop nfs-kernel-server
+- name: copy nfs-kernel-server to set nfs versions
+  become: true
+  copy:
+    src: nfs-kernel-server
+    dest: /etc/default/nfs-kernel-server
+    remote_src: no
+    owner: root
+- name: set rpcbind service
+  become: true
+  shell: systemctl mask rpcbind.service
+- name: set rpcbind socket
+  become: true
+  shell: systemctl mask rpcbind.socket
+- name: stop nfs
+  become: true
+  shell: systemctl stop nfs-kernel-server
+- name: remove /etc/exports
+  become: true
+  ansible.builtin.file:
+    path: etc/exports
+    state: absent
+- name: set /etc/exports to allow access to remote directories
+  become: true
+  copy:
+    src: "{{ exports }}"
+    dest: /etc/exports
+    remote_src: no
+    owner: root
+- name: restart nfs server
+  become: true
+  shell: systemctl restart nfs-kernel-server

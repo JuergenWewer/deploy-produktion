@@ -1,0 +1,27 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: yuuvis
+    name: architect
+  name: architect
+spec:
+  replicas: {{.Values.yuuvis.client.architect.instances}}
+  selector:
+    matchLabels:
+      name: architect
+  template:
+    metadata:
+      labels:
+        name: architect
+    spec:
+      containers:
+      - image: {{.Values.yuuvis.client.architect.dockerImage}}
+        imagePullPolicy: {{ .Values.yuuvis.image.imagePullPolicy }}
+        name: architect
+        ports:
+        - containerPort: 80
+          protocol: TCP
+      imagePullSecrets:
+      - name: {{.Values.yuuvis.image.imagePullSecret }}
+      restartPolicy: Always

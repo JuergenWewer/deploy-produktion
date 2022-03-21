@@ -1,0 +1,9 @@
+- name: delete dynamic storage provisioner
+  kubernetes.core.helm:
+    name: dynamicstorageprovisioner
+    state: absent
+    namespace: kube-system
+    chart_ref: $HOME/workspace/yuuvis/dynamic-storage-provisioner
+    kubeconfig_path: "{{ kubeconfig }}"
+    create_namespace: True
+    wait: true
