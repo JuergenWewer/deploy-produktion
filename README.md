@@ -2,6 +2,9 @@
 
 cd yuuvis/playbooks
 ansible-playbook -i optimal deleteyuuvis.yml -v
+cd elastichelmcharts/playbooks
+ansible-playbook -i optimal elkDelete.yml -v
+
 
 
 git clone https://github.com/JuergenWewer/deploy-produktion.git
