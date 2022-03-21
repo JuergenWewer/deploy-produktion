@@ -1,0 +1,20 @@
+- name: install pv-es
+  shell: kubectl apply -f "{{ pvsdir }}"/pv-es.yml
+  args:
+    chdir: "{{ installdir }}"
+- name: install pv-gg
+  shell: kubectl apply -f "{{ pvsdir }}"/pv-gg.yml
+  args:
+    chdir: "{{ installdir }}"
+- name: install pv-mi
+  shell: kubectl apply -f "{{ pvsdir }}"/pv-mi.yml
+  args:
+    chdir: "{{ installdir }}"
+- name: install pv-mq
+  shell: kubectl apply -f "{{ pvsdir }}"/pv-mq.yml
+  args:
+    chdir: "{{ installdir }}"
+- name: install pv-pg
+  shell: kubectl apply -f "{{ pvsdir }}"/pv-pg.yml
+  args:
+    chdir: "{{ installdir }}"

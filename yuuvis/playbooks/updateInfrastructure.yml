@@ -1,0 +1,73 @@
+- hosts: master
+  tasks:
+    - name: create directories to be mounted
+      become: true
+      file:
+        path: '{{ item }}'
+        state: directory
+        owner: root
+        group: root
+        mode: 0777
+      with_lines: cat "{{ mountdirs }}"
+- hosts: localhost
+  tasks:
+    - name: create infrastructure and waiting suppression ending
+      community.kubernetes.helm:
+        name: infrastructure
+        release_namespace: infrastructure
+        chart_ref: $HOME/workspace/yuuvis/infrastructure
+        kubeconfig_path: "{{ kubeconfig }}"
+        create_namespace: true
+        wait: true
+        values:
+          yuuvis:
+            authentication:
+              ip: "{{ hostIP }}"
+              port: "{{ hostPort }}"
+            db:
+              password: "{{ dbpassword }}"
+            keycloak:
+              password: "{{ keycloakpassword }}"
+              db:
+                password: "{{ keycloakdbpassword }}"
+              realm:
+                yuuvistest:
+                  user:
+                    password: "{{ keycloakrealmyuuvistestuserpassword }}"
+                testyuuvis:
+                  user:
+                    password: "{{ keycloakrealmtestyuuvisuserpassword }}"
+          elasticsearch:
+            storage: "{{ elasticsearchstorage }}"
+            storageClassName: "{{ elasticsearchstorageClassName }}"
+          postgresql:
+            postgresqlPassword: "{{ postgresqlPassword }}"
+            persistence:
+              storageClass: "{{ postgresqlpersistencestorageClass }}"
+              size: "{{ postgresqlpersistencesize }}"
+          rabbitmq:
+            auth:
+              password: "{{ rabbitmqauthpassword }}"
+            persistence:
+              storageClass: "{{ rabbitmqpersistencestorageClass }}"
+              size: "{{ rabbitmqpersistencesize }}"
+          gogs:
+            persistence:
+              storageClassName: "{{ gogspersistencestorageClassName }}"
+              size: "{{ gogspersistencesize }}"
+            git:
+              password: "{{ gogsgitpassword }}"
+          minio:
+            accessKey: "{{ minioaccessKey }}"
+            secretKey: "{{ miniosecretKey }}"
+            persistence:
+              storageClass: "{{ miniopersistencestorageClass }}"
+              size: "{{ miniopersistencesize }}"
+              enabled: "{{ miniopersistenceenabled }}"
+            azuregateway:
+              enabled: "{{ minioazuregatewayenabled }}"
+          redis:
+            master:
+              persistence:
+                storageClass: "{{ redismasterpersistencestorageClass }}"
+

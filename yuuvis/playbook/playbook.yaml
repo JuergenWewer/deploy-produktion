@@ -1,0 +1,4 @@
+- name: Install dynamic storage provisioner
+  import_tasks: ../yuuvis/playbooks/DRdynamicStorageProvisioner.yml
+- name: Install infrastructure and waiting suppression ending
+  import_tasks: ../yuuvis/playbooks/DRupdateTask.yml

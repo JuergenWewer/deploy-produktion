@@ -1,0 +1,519 @@
+imageCredentials:
+  yuuvisorg:
+    registry: docker.yuuvis.org
+    username:
+    password:
+
+yuuvis:
+  keycloak:
+    # !!! Change before running
+    # this variable must contain the "public" ip of keycloak
+    # this ip will be sent to the user from the authentication service
+    address: 192.168.99.100:30111
+  git:
+    protocol: http
+    url: gitea-http.infrastructure:3000/yuuvis/yuuvis-config.git
+    server: gitea-http.infrastructure:3000
+    # please not that since infrastructure helm chart 0.9.0 gitea is used 
+    # in previous versions gogs was used
+    # url: gogs.infrastructure/yuuvis/yuuvis-config.git
+    # server: gogs.infrastructure
+    name: yuuvis-config
+    user: yuuvis
+    password: changeme
+    branch: master
+  amqp:
+    user: rodger
+    password: changeme
+    url: rabbitmq.infrastructure
+    port: 5672
+  db:
+    name: yuuvis
+    server: postgresql.infrastructure:5432
+    user: yuuvis
+    password: changeme
+  elastic:
+    url: elasticsearch.infrastructure
+    init:
+      index:
+        name: yuuvis
+        number_of_shards: 3
+        number_of_replicas: 1
+  redis:
+    host: redis-master.infrastructure
+    port: 6379
+  authconfig: |
+    routing.defaultEntryPoint: '/client/index.html'
+    
+    management.server.port: {{.Values.yuuvis.services.authentication.managePort}}
+    management.server.servlet.context-path: /
+    
+    management:
+      endpoints:
+        web:
+          base-path: /manage
+          exposure:
+            include:
+            - health
+            - info
+            - refresh
+            - prometheus
+      endpoint:
+        refresh:
+          enabled: true
+        info:
+          enabled: true
+        health:
+          enabled: true
+        prometheus:
+          enabled: true
+    routing.endpoints:
+      - 'authentication'
+      - 'api'
+      - 'search'
+      - 'client'
+      - 'api-web'
+      - 'tenant-management'
+      - 'viewer'
+      - 'architect'
+      - 'custom'
+      - 'userservice'
+      - 'bpm-engine'
+
+    authorization.accesses:
+    ### manage-endpoints
+      - endpoints: /manage/**
+        expose: true
+      - endpoints: /*/manage/**
+        access: hasAuthority('YUUVIS_SYSTEM_INTEGRATOR')
+    ### API-endpoints
+      - endpoints: /api/system/**
+        access: hasAuthority('YUUVIS_SYSTEM_INTEGRATOR')
+      - endpoints: /api/admin/**
+        access: hasAuthority('YUUVIS_TENANT_ADMIN')
+      - endpoints: /api/dms/**
+    ### endpoints for api swagger
+      - endpoints: /api/swagger-ui.html/**,/api/**/springfox-swagger-ui/**,/api/**/swagger-resources/**,/api/**/v2/api-docs/**
+      - endpoints: /api/swagger-ui/**,/api/swagger/v3/api-docs/**
+      - endpoints: /api/api/system/**
+        access: hasAuthority('YUUVIS_SYSTEM_INTEGRATOR')
+      - endpoints: /api/api/admin/**
+        access: hasAuthority('YUUVIS_TENANT_ADMIN')
+      - endpoints: /api/api/dms/**
+    ### Webclient
+      - endpoints: /search/**,/viewer/**,/architect/**
+      - endpoints: /client/**
+        expose: true
+      - endpoints: /custom/**
+        expose: true
+    ### api-web
+      - endpoints: /api-web/swagger-ui.html/**,/api-web/**/springfox-swagger-ui/**,/api-web/**/swagger-resources/**,/api-web/**/v2/api-docs/**,/api-web/**/swagger-ui**/**,/api-web/springfox**,/api-web/favicon**
+      - endpoints: /api-web/api/resources/**,/api-web/api/users/**,/api-web/api/bpm/**,/api-web/api/dms/**
+      - endpoints: /api-web/api/system/**
+        access: hasAuthority('YUUVIS_SYSTEM_INTEGRATOR')
+      - endpoints: /api-web/api/admin/**
+        access: hasAuthority('YUUVIS_TENANT_ADMIN')
+    ### tenant-management
+      - endpoints: /tenant-management/swagger-ui.html/**,/tenant-management/**/springfox-swagger-ui/**,/tenant-management/**/swagger-resources/**,/tenant-management/**/v2/api-docs/**
+      - endpoints: /tenant-management/api/system/**
+        access: hasAuthority('YUUVIS_SYSTEM_INTEGRATOR')
+      - endpoints: /tenant-management/api/admin/**
+        access: hasAuthority('YUUVIS_TENANT_ADMIN')
+    ### userservice
+      - endpoints: /userservice/**
+    ### bpm-engine
+      - endpoints: /bpm-engine/swagger-ui.html,/bpm-engine/swagger-ui/**,/bpm-engine/v2/api-docs/**,/bpm-engine/v3/api-docs/**
+      - endpoints: /bpm-engine/api/**
+      - endpoints: /bpm-engine/internal/**
+        access: hasAuthority('YUUVIS_SYSTEM_INTEGRATOR')
+
+  storage: |
+    storage:
+      default-rendition-repository: renrepo
+      repositories:
+        s3:
+          profiles: ['s3profile1']
+          default: true
+        archive_s3:
+          profiles: ['s3profile2']
+          default: false
+        renrepo:
+          profiles: ['s3renrepo']
+          default: false
+      profiles:
+        s3:
+          s3profile1:
+            access-key: 'MGMWCOYTDUSLNCFE'
+            secret-key: 'changeme'
+            url: 'http://minio.infrastructure:9000'
+            bucket: 'dmscloudrepodocker'
+          s3profile2:
+            access-key: 'MGMWCOYTDUSLNCFE'
+            secret-key: 'changeme'
+            url: 'http://minio.infrastructure:9000'
+            bucket: 's3archive'
+            pathTemplate: '{tenant}-{objectTypeId}/{DATE(yyyy)}/{DATE(MM)}/{DATE(dd)}'
+          s3renrepo:
+            access-key: 'MGMWCOYTDUSLNCFE'
+            secret-key: 'changeme'
+            url: 'http://minio.infrastructure:9000'
+            bucket: 'rendition'
+            pathTemplate: '{contentStreamId.substring(0,2)}/{contentStreamId.substring(2,4)}/{contentStreamId.substring(4,6)}'
+
+  oauth2: |
+    # configuration for the yuuvis authentication service
+    keycloak.host: {{.Values.yuuvis.keycloak.address}}
+    authentication.filter: oauth2
+    authentication.provider: oauth2
+    authentication.exposed.endpoints: ''
+    authentication.oauth2.tenants:
+    - name: yuuvistest
+      clientId: yuuvis-authentication-service
+      clientSecret: dbdf4856-3c86-4e5f-aca7-96f3d93d35b4
+      userAuthorizationUri: https://${keycloak.host}/auth/realms/yuuvistest/protocol/openid-connect/auth
+      accessTokenUri: https://${keycloak.host}/auth/realms/yuuvistest/protocol/openid-connect/token
+      userInfoUri: https://${keycloak.host}/auth/realms/yuuvistest/protocol/openid-connect/userinfo
+      endSessionUri: https://${keycloak.host}/auth/realms/yuuvistest/protocol/openid-connect/logout?redirect_uri=${redir}
+      userNameExtractionPattern: $.sub
+    - name: testyuuvis
+      clientId: yuuvis-authentication-service
+      clientSecret: 61048b73-8cd7-4682-b78c-786c5dc8a2a1
+      userAuthorizationUri: https://${keycloak.host}/auth/realms/testyuuvis/protocol/openid-connect/auth
+      accessTokenUri: https://${keycloak.host}/auth/realms/testyuuvis/protocol/openid-connect/token
+      userInfoUri: https://${keycloak.host}/auth/realms/testyuuvis/protocol/openid-connect/userinfo
+      endSessionUri: https://${keycloak.host}/auth/realms/testyuuvis/protocol/openid-connect/logout?redirect_uri=${redir}
+      userNameExtractionPattern: $.sub 
+
+    # configuration for the yuuvis organization service
+    keycloak.server: https://keycloak-https.infrastructure/auth
+    keycloak.admin.username: keycloak
+    keycloak.admin.password: changeme
+  systemschema: |
+    <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+    <schema xmlns="http://optimal-systems.org/ns/dmscloud/schema/v5.0/">
+      <version>1</version>
+      <lastModificationDate>2017-11-13T06:02:42.56</lastModificationDate>
+      <propertyDateTimeDefinition>
+        <id>date</id>
+        <localNamespace>urn:optimal-systems.de:dmscloud:dokument</localNamespace>
+        <description>the date of the document???</description>
+        <propertyType>datetime</propertyType>
+        <cardinality>single</cardinality>
+        <required>false</required>
+      </propertyDateTimeDefinition>
+      <propertyStringDefinition>
+        <id>Name</id>
+        <propertyType>string</propertyType>
+        <cardinality>single</cardinality>
+        <required>false</required>
+      </propertyStringDefinition>
+      <typeDocumentDefinition>
+        <id>document</id>
+        <localNamespace>urn:optimal-systems.de:dmscloud:document</localNamespace>
+        <description>...</description>
+        <baseId>system:document</baseId>
+        <propertyReference>Name</propertyReference>
+        <propertyReference>date</propertyReference>
+        <contentStreamAllowed>required</contentStreamAllowed>
+        <secondaryObjectTypeId>system:rmDestructionRetention</secondaryObjectTypeId>
+      </typeDocumentDefinition>
+    </schema>
+  systemroleset: |
+    <?xml version="1.0" encoding="utf-8"?>
+        <roleSet xmlns="http://optimal-systems.org/ns/dmscloud/roleset/">
+          <role>
+            <name>YUUVIS_DEFAULT</name>
+            <permission>
+              <action>create</action>
+              <action>read</action>
+              <action>write</action>
+              <action>delete</action>
+            </permission>
+          </role>
+          <role>
+            <name>YUUVIS_TENANT_ADMIN</name>
+            <permission>
+              <action>create</action>
+              <action>read</action>
+              <action>write</action>
+              <action>delete</action>
+            </permission>
+          </role>
+          <role>
+            <name>YUUVIS_SYSTEM_INTEGRATOR</name>
+            <permission>
+              <action>create</action>
+              <action>read</action>
+              <action>write</action>
+              <action>delete</action>
+            </permission>
+          </role>
+        </roleSet>      
+  systemHookConfiguration: |
+    {"systemhooks" :
+      {"amqp" : [
+        {"enable" : true,
+         "predicate" : "spel:(contentStreams != null && contentStreams.size() > 0 && contentStreams[0]['range'] != null && contentStreams[0]['range'].length() > 0) ? true : false",
+         "type" : "object.insert.document",
+         "url" : "{{.Values.yuuvis.amqp.url}}:{{.Values.yuuvis.amqp.port}}",
+         "user" : "{{.Values.yuuvis.amqp.user}}",
+         "password" : "{{.Values.yuuvis.amqp.password}}",
+         "queue" : "lc.textextraction",
+         "bulkSize" : 1
+        }
+      ],
+       "webhooks": [
+         {
+           "enable": true,
+           "predicate": "spel:true",
+           "type": "user.info",
+           "url": "http://organization/api/userinfo/${tenant}/${userId}"
+         }
+       ]
+     }
+    }
+  systemProd: |
+    spring.cloud.kubernetes.discovery.filter: metadata!=null && metadata.labels!=null && metadata.labels['yuuvis']=="true"
+    schema.changed.observers: /rest-ws/refreshschema?global=%s, /sothook/schema/refresh?global=%s, /primarysothook/schema/refresh?global=%s
+  serviceConfiguration: |
+    {"services": {
+       "contentanalyzer": {
+         "analyze": [				
+          {
+            "predicate": "spel:(properties != null && properties['Name'] != null && properties['Name']['value'] == 'disable') ? true : false",
+            "mimetype": true,
+            "content": false
+          },				
+          {
+            "predicate": "spel:(contentStreams != null && contentStreams.size() > 0 && contentStreams[0]['range'] != null && contentStreams[0]['range'].length() > 0) ? true : false",
+            "mimetype": false,
+            "content": false
+          }
+          ]
+        }
+      }
+    }
+
+  image:
+    imagePullPolicy: IfNotPresent
+  livenessProbe:
+    enable: false
+    initialDelaySeconds: 300
+    periodSeconds: 30
+    timeoutSeconds: 10
+    path: /manage/info
+  readinessProbe:
+    enable: true
+    initialDelaySeconds: 0
+    periodSeconds: 30
+    timeoutSeconds: 5
+    path: /manage/health
+  labels:
+    app: yuuvis
+  services:
+    api:
+      dockerRegistry: docker.yuuvis.org/yuuvis/api-gateway
+      tag: 4.9.6
+      profiles: prod,redis,docker,kubernetes,metrics
+      instances: 1
+      java:
+        maxHeap: -Xmx512m -XX:+ExitOnOutOfMemoryError
+      port: 7450
+      nodeport:
+        use: false
+        value: 30033
+      requests:
+        memory: "512Mi"
+    admin:
+      dockerRegistry: docker.yuuvis.org/yuuvis/admin
+      tag: 5.7.2.3
+      profiles: prod,docker,kubernetes
+      instances: 1
+      port: 7273
+      java:
+        maxHeap: -Xmx128m -XX:+ExitOnOutOfMemoryError
+      requests:
+        memory: "128Mi"
+    audit:
+      dockerRegistry: docker.yuuvis.org/yuuvis/audit
+      tag: 4.9.6
+      profiles: prod,jpapostgres,dbs,docker,kubernetes,metrics
+      instances: 1
+      port: 7251
+      java:
+        maxHeap: -Xmx512m -XX:+ExitOnOutOfMemoryError
+      requests:
+        memory: "512Mi"
+    authentication:
+      # create services with type nodport for authentication
+      nodeport:
+        use: true
+        value: 30080
+      dockerRegistry: docker.yuuvis.org/yuuvis/authentication
+      tag: 4.9.6
+      profiles: prod,oauth2,docker,kubernetes,metrics
+      instances: 1
+      port: 8080
+      # for the manage endpoints a dedicated port is used
+      managePort: 9091
+      requests:
+        memory: "512Mi"
+      java:
+        maxHeap: -Xmx512m -XX:+ExitOnOutOfMemoryError
+      volumes: |
+        - name: keycloak-tls-selfsigned
+          secret:
+            defaultMode: 420
+            secretName: keycloak-selfsigned-cert-secret
+      volumeMounts: |
+        - mountPath: /etc/yuuvis/certs
+          name: keycloak-tls-selfsigned
+    config:
+      dockerRegistry: docker.yuuvis.org/yuuvis/config
+      tag: 4.9.6
+      instances: 1
+      port: 7282
+      java:
+        maxHeap: -Xmx256m -XX:+ExitOnOutOfMemoryError
+      requests:
+        memory: "256Mi"
+    contentanalyzer:
+      dockerRegistry: docker.yuuvis.org/yuuvis/contentanalyzer
+      tag: 4.9.6
+      profiles: prod,docker,kubernetes,metrics
+      instances: 2
+      port: 7430
+      java:
+        maxHeap: -Xmx1024m -XX:+ExitOnOutOfMemoryError
+      requests:
+        memory: "1024Mi"
+    index:
+      dockerRegistry: docker.yuuvis.org/yuuvis/index
+      profiles: prod,es,docker,kubernetes,redis,metrics
+      tag: 4.9.6
+      instances: 1
+      port: 7291
+      dependencyCheck:
+        enable: true
+        url: http://elasticsearch.infrastructure.svc.cluster.local:9200
+      java:
+        maxHeap: -Xmx1024m -XX:+ExitOnOutOfMemoryError
+      requests:
+        memory: "1024Mi"
+    organization:
+      dockerRegistry: docker.yuuvis.org/yuuvis/organization
+      tag: 4.9.6
+      profiles: prod,oauth2,keycloak,docker,kubernetes,metrics
+      instances: 1
+      port: 7440
+      requests:
+        memory: "256Mi"
+      java:
+        maxHeap: -Xmx256m -XX:+ExitOnOutOfMemoryError
+      volumes: |
+        - name: keycloak-tls-selfsigned
+          secret:
+            defaultMode: 420
+            secretName: keycloak-selfsigned-cert-secret
+      volumeMounts: |
+        - mountPath: /etc/yuuvis/certs
+          name: keycloak-tls-selfsigned
+    registry:
+      dockerRegistry: docker.yuuvis.org/yuuvis/registry
+      tag: 4.9.6
+      profiles: prod,docker,jpapostgres,dbs,redis,kubernetes,metrics
+      instances: 1
+      port: 7510
+      java:
+        maxHeap: -Xmx1024m -XX:+ExitOnOutOfMemoryError
+      requests:
+        memory: "1024Mi"
+    repository:
+      dockerRegistry: docker.yuuvis.org/yuuvis/repository
+      tag: 4.9.6
+      profiles: prod,storage,docker,kubernetes,redis,metrics
+      instances: 1
+      port: 7500
+      dependencyCheck:
+        enable: true
+        url: http://minio.infrastructure.svc.cluster.local:9000
+      java:
+        maxHeap: -Xmx1024m -XX:+ExitOnOutOfMemoryError
+      requests:
+        memory: "1024Mi"
+    search:
+      dockerRegistry: docker.yuuvis.org/yuuvis/search
+      tag: 4.9.6
+      profiles: prod,es,docker,kubernetes,metrics
+      instances: 1
+      port: 7221
+      dependencyCheck:
+        enable: true
+        url: http://elasticsearch.infrastructure.svc.cluster.local:9200
+      java:
+        maxHeap: -Xmx1024m -XX:+ExitOnOutOfMemoryError
+      requests:
+        memory: "1024Mi"
+    system:
+      dockerRegistry: docker.yuuvis.org/yuuvis/system
+      profiles: prod,docker,redis,kubernetes,metrics
+      tag: 4.9.6
+      instances: 1
+      port: 7400
+      java:
+        maxHeap: -Xmx512m -XX:+ExitOnOutOfMemoryError
+      requests:
+        memory: "512Mi"
+    commander:
+      dockerRegistry: docker.yuuvis.org/yuuvis/commander
+      profiles: prod,docker,kubernetes,dbs,es
+      tag: 4.9.6
+      instances: 0
+      java:
+        maxHeap: -Xmx512m -XX:+ExitOnOutOfMemoryError
+      requests:
+        memory: "512Mi"
+    archive:
+      deploy: false
+      dockerRegistry: docker.yuuvis.org/yuuvis/archiveservice
+      tag: 5.25.2
+      profiles: prod,docker,storage
+      instances: 1
+      java:
+        maxHeap: -Xmx512m -XX:+ExitOnOutOfMemoryError
+      requests:
+        memory: "512Mi"
+      port: 7530
+    controller:
+      dockerRegistry: docker.yuuvis.org/yuuvis/controller
+      tag: 4.9.0
+      profiles: prod,docker,es,oauth2,lc,mq,kubernetes
+      instances: 1
+      port: 7332
+      java:
+        maxHeap: -Xmx512m -XX:+ExitOnOutOfMemoryError
+      requests:
+        memory: "512Mi"
+      volumes: |
+        - name: keycloak-tls-selfsigned
+          secret:
+            defaultMode: 420
+            secretName: keycloak-selfsigned-cert-secret
+      volumeMounts: |
+        - mountPath: /etc/yuuvis/certs
+          name: keycloak-tls-selfsigned
+    textextractor:
+      dockerRegistry: docker.yuuvis.org/yuuvis/textextractor
+      tag: 4.9.0
+      profiles: prod,docker,es,lc,mq,kubernetes
+      instances: 1
+      port: 7420
+      dependencyCheck:
+        enable: true
+        url: http://elasticsearch.infrastructure.svc.cluster.local:9200
+      java:
+        maxHeap: -Xmx1024m -XX:+ExitOnOutOfMemoryError
+      requests:
+        memory: "1024Mi"
+initContainer:
+  command: "until wget -q --spider http://configservice/api/resources/application-docker.yml; do echo waiting for configservice; sleep 11; done;"

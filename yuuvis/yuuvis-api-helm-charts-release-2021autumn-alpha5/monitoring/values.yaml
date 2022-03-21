@@ -1,0 +1,12 @@
+kube-prometheus-stack:
+  prometheus:
+    prometheusSpec:
+      serviceMonitorSelectorNilUsesHelmValues: false
+      serviceMonitorNamespaceSelector: {}     
+      retention: 10d    
+  grafana:
+    adminPassword: optimal
+    service:
+      enabled: true
+      type: NodePort
+      targetPort: 3000

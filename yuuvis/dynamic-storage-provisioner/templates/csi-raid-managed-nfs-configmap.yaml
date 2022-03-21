@@ -1,0 +1,23 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: csi-raid-configmap
+  namespace: kube-system
+data:
+  csiraid.config: |
+    [source]
+    type = sftp
+    host = {{.Values.csiraid.nfs.server}}
+    path = /mnt/optimal/nfs-csi-provisioner
+    user = root
+    key_file = /.ssh/id_rsa
+    md5sum_command = md5sum
+    sha1sum_command = sha1sum
+    [target]
+    type = sftp
+    host = {{.Values.csiraid.nfs.server}}
+    path = /mnt/optimal/nfs-csi-provisioner-backup
+    user = root
+    key_file = /.ssh/id_rsa
+    md5sum_command = md5sum
+    sha1sum_command = sha1sum

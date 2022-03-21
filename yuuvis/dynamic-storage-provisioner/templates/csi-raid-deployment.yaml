@@ -1,0 +1,62 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: csi-raid
+  labels:
+    app: csi-raid
+  # replace with namespace where provisioner is deployed
+  namespace: kube-system
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: csi-raid
+  template:
+    metadata:
+      labels:
+        app: csi-raid
+    spec:
+      serviceAccountName: csi-raid
+      containers:
+        - name: csi-raid
+          image: jw-cloud.org:8443/csi-raid:v0.0.40
+          volumeMounts:
+            - name: nfs-client-root
+              mountPath: /persistentvolumes
+            - name: csi-raid-config
+              mountPath: /csiraid.config
+              subPath: csiraid.config
+            - name: ssh-keys-v
+              readOnly: true
+              # container will see /.ssh/id_rsa as usual:
+              mountPath: "/.ssh"
+          env:
+            - name: PROVISIONER_NAME
+              value: jw-cloud.org/csi-raid
+            - name: NFS_SERVER
+              value: {{.Values.csiraid.nfs.server}}
+            - name: NFS_PATH
+              value: /mnt/optimal/nfs-csi-provisioner
+            - name: CSIRAID_SOURCE
+              value: source
+            - name: CSIRAID_TARGET
+              value: target
+            - name: CSIRAID_ACTIVE
+              value: "{{.Values.csiraid.nfs.backup}}"
+      imagePullSecrets:
+        - name: jw-repo-secret
+      volumes:
+        - name: nfs-client-root
+          nfs:
+            server: {{.Values.csiraid.nfs.server}}
+            path: /mnt/optimal/nfs-csi-provisioner
+        - name: csi-raid-config
+          configMap:
+            name: csi-raid-configmap
+        - name: ssh-keys-v
+          secret:
+            secretName: {{.Values.csiraid.nfs.secret}}
+            defaultMode: 0600
+
