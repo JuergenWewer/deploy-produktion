@@ -1,0 +1,10 @@
+serverurl: http://10.0.1.51
+serverport: 30036
+tenant: prosozneo
+sslenabled: true
+apiport: 443
+selfsignedcertificate: true
+keystorecn: 10.0.1.51
+keystorepath: yuuviskeystoremacpro.jks
+keystorepassword: secret
+

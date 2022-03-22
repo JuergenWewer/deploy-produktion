@@ -1,0 +1,37 @@
+<settings>
+    <servers>
+        <server>
+            <id>optimal-maven-snapshots</id>
+            <username>admin</username>
+            <password>admin123jwabcdef</password>
+        </server>
+        <server>
+            <id>optimal-maven-releases</id>
+            <username>admin</username>
+            <password>admin123jwabcdef</password>
+        </server>
+    </servers>
+    <profiles>
+        <profile>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <id>optimal</id>
+            <repositories>
+                <repository>
+                    <id>optimal-maven-snapshots</id>
+                    <name>optimal-maven-snapshots</name>
+                    <url>https://jw-cloud.org/repository/maven-snapshots/</url>
+                </repository>
+                <repository>
+                    <id>optimal-maven-releases</id>
+                    <name>optimal-maven-releases</name>
+                    <url>https://jw-cloud.org/repository/maven-releases/</url>
+                </repository>
+            </repositories>
+        </profile>
+    </profiles>
+    <activeProfiles>
+        <activeProfile>optimal</activeProfile>
+    </activeProfiles>
+</settings>
