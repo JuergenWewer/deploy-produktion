@@ -1,0 +1,741 @@
+openapi: 3.0.0
+info:
+  title: osvhProsozNeoWebAPI
+  version: v1
+servers:
+  - url: 'http://localhost:8080'
+paths:
+  /api/Dokument:
+    get:
+      summary: Stellt die zur eDokumentenID gehörige Datei zur Verfügung
+      operationId: Dokument_Get
+      tags:
+        - Dokument
+      parameters:
+        - name: eDokumentenID
+          in: query
+          description: eDokumentenID des Dokuments
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Dekument wurde gefunden und wird als Bytestream zurueckgegeben
+          content:
+            application/octet-stream:
+              schema:
+                type: string
+                format: binary
+        '204':
+          description: 'Dokument mit der eDokumentenID existiert nicht, oder es wurde noch keine Dokumentdatei angeheftet.'
+          content:
+            application/json:
+              schema:
+                type: string
+        '401':
+          description: Nicht autorisiert.
+          content:
+            application/json:
+              schema:
+                type: string
+        '500':
+          description: Fehler bei der Kommunikation mit enaio® aufgetreten
+          content:
+            application/json:
+              schema:
+                type: string
+      security:
+        - httpBasicAuth: []
+    post:
+      tags:
+        - Dokument
+      summary: |-
+        Erstellt aus den übergebenen Metadaten und dem File ein neues Dokument in enaio®
+        Je nach Ausprägung der Metadaten wird das Dokument in einer Klientakte oder Fallakte/Vorgang (ggf. mit Registerbezug) abgelegt.
+        Für die korrekte Aktenzuordnung werden a) Fallakte.Vorgang.ID + ggf. Fallakte.Vorgang.Register oder b) Klientakte.Klient.ID
+        benötigt.
+      operationId: Dokument_Post
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                Fallakte.EAktenID:
+                  type: string
+                  nullable: true
+                Fallakte.Vorgang.Aktenzeichen:
+                  type: string
+                  nullable: true
+                Fallakte.Vorgang.Archivieren:
+                  type: string
+                  nullable: true
+                Fallakte.Vorgang.ArchivierenDatum:
+                  type: string
+                  nullable: true
+                Fallakte.Vorgang.Bemerkung:
+                  type: string
+                  nullable: true
+                Fallakte.Vorgang.ID:
+                  type: string
+                  nullable: true
+                Fallakte.Vorgang.Loeschen:
+                  type: string
+                  nullable: true
+                Fallakte.Vorgang.LoeschenDatum:
+                  type: string
+                  nullable: true
+                Fallakte.Vorgang.Rechtsgebiet:
+                  type: string
+                  nullable: true
+                Fallakte.Vorgang.Register:
+                  type: string
+                  nullable: true
+                Fallakte.Vorgang.ZustaendigerSachbearbeiter:
+                  type: string
+                  nullable: true
+                Fallakte.Antragssteller.ID:
+                  type: string
+                  nullable: true
+                Fallakte.Antragssteller.Geburtsdatum:
+                  type: string
+                  nullable: true
+                Fallakte.Antragssteller.Vorname:
+                  type: string
+                  nullable: true
+                Fallakte.Antragssteller.Nachname:
+                  type: string
+                  nullable: true
+                Fallakte.Leistungsempfaenger.ID:
+                  type: string
+                  nullable: true
+                Fallakte.Leistungsempfaenger.Geburtsdatum:
+                  type: string
+                  nullable: true
+                Fallakte.Leistungsempfaenger.Vorname:
+                  type: string
+                  nullable: true
+                Fallakte.Leistungsempfaenger.Nachname:
+                  type: string
+                  nullable: true
+                Fallakte.Unterhaltspflichtiger.ID:
+                  type: string
+                  nullable: true
+                Fallakte.Unterhaltspflichtiger.Geburtsdatum:
+                  type: string
+                  nullable: true
+                Fallakte.Unterhaltspflichtiger.Vorname:
+                  type: string
+                  nullable: true
+                Fallakte.Unterhaltspflichtiger.Nachname:
+                  type: string
+                  nullable: true
+                Fallakte.OrdnerObjektTypName:
+                  type: string
+                  nullable: true
+                Fallakte.RegisterObjektTypName:
+                  type: string
+                  nullable: true
+                Klientakte.EAktenID:
+                  type: string
+                  nullable: true
+                Klientakte.Klient.Adresse:
+                  type: string
+                  nullable: true
+                Klientakte.Klient.ID:
+                  type: string
+                  nullable: true
+                Klientakte.Klient.Geburtsdatum:
+                  type: string
+                  nullable: true
+                Klientakte.Klient.Vorname:
+                  type: string
+                  nullable: true
+                Klientakte.Klient.Nachname:
+                  type: string
+                  nullable: true
+                Klientakte.Archivieren:
+                  type: string
+                  nullable: true
+                Klientakte.ArchivierenDatum:
+                  type: string
+                  nullable: true
+                Klientakte.Loeschen:
+                  type: string
+                  nullable: true
+                Klientakte.LoeschenDatum:
+                  type: string
+                  nullable: true
+                Klientakte.OrdnerObjektTypName:
+                  type: string
+                  nullable: true
+                Dokument.EDokumentenID:
+                  type: string
+                  nullable: true
+                Dokument.ErstellungZeitpunkt:
+                  type: string
+                  nullable: true
+                Dokument.Typ:
+                  type: string
+                  nullable: true
+                Dokument.Vorlage:
+                  type: string
+                  nullable: true
+                Dokument.Sachbearbeiter.Kennung:
+                  type: string
+                  nullable: true
+                Dokument.Sachbearbeiter.Vorname:
+                  type: string
+                  nullable: true
+                Dokument.Sachbearbeiter.Nachname:
+                  type: string
+                  nullable: true
+                Dokument.Empfaenger.Adresse:
+                  type: string
+                  nullable: true
+                Dokument.Empfaenger.Vorname:
+                  type: string
+                  nullable: true
+                Dokument.Empfaenger.Nachname:
+                  type: string
+                  nullable: true
+                Dokument.ProsozDateiname:
+                  type: string
+                  nullable: true
+                Dokument.DokumentObjektTypName:
+                  type: string
+                  nullable: true
+                Dokument.ContentUrl:
+                  type: string
+                  nullable: true
+                File:
+                  type: string
+                  format: binary
+                  nullable: true
+            encoding:
+              File:
+                contentType: application/pdf, image/jpeg
+      responses:
+        '200':
+          description: Dokument erfolgreich im enaio® angelegt.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FallakteDokument'
+        '204':
+          description: Akte existiert nicht.
+          content:
+            application/json:
+              schema:
+                type: string
+        '401':
+          description: Nicht autorisiert.
+          content:
+            application/json:
+              schema:
+                type: string
+        '500':
+          description: Fehler bei der Kommunikation mit enaio® aufgetreten
+          content:
+            application/json:
+              schema:
+                type: string
+      security:
+        - httpBasicAuth: []
+  /api/Dokument/GetDokumente:
+    get:
+      tags:
+        - Dokument
+      summary: 'Ermittelt in Abhängigkeit zur klientID die Dokumente der Klientakte, oder in Abhängigkeit zur vorgangID (ggf. mit vorgangRegister) die Dokumente der Fallakte'
+      operationId: Dokument_GetDokumente
+      parameters:
+        - name: klientID
+          in: query
+          description: ID der Klientakte
+          schema:
+            type: string
+            nullable: true
+          x-position: 1
+        - name: vorgangID
+          in: query
+          description: ID der Vorgangsakte/Fallakte
+          schema:
+            type: string
+            nullable: true
+          x-position: 2
+        - name: vorgangRegister
+          in: query
+          description: Vorgangsregister
+          schema:
+            type: string
+            nullable: true
+          x-position: 3
+      responses:
+        '200':
+          description: Akte gefunden - Dokumente werden zurückgeliefert.
+          content:
+            application/octet-stream:
+              schema:
+                type: string
+                format: binary
+        '204':
+          description: Die VorgangsID oder das Register/der Unterordner existiert im enaio® nicht.
+          content:
+            application/json:
+              schema:
+                type: string
+        '401':
+          description: Nicht autorisiert.
+          content:
+            application/json:
+              schema:
+                type: string
+        '500':
+          description: Fehler bei der Kommunikation mit enaio® aufgetreten
+          content:
+            application/json:
+              schema:
+                type: string
+      security:
+        - httpBasicAuth: []
+  '/api/Fallakte/{vorgangsId}':
+    get:
+      tags:
+        - Fallakte
+      summary: Gibt anhand der VorgangsID die zugehörige Fallakte aus dem enaio® zurück.
+      operationId: Fallakte_Get
+      parameters:
+        - name: vorgangsId
+          in: path
+          required: true
+          schema:
+            type: string
+            nullable: true
+          x-position: 1
+      responses:
+        '200':
+          description: Die angeforderte Akte wurde gefunden.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Fallakte'
+        '204':
+          description: Angeforderte Akte existiert nicht.
+          content:
+            application/json:
+              schema:
+                type: string
+        '401':
+          description: Nicht autorisiert.
+          content:
+            application/json:
+              schema:
+                type: string
+        '500':
+          description: Fehler bei der Kommunikation mit enaio® aufgetreten
+          content:
+            application/json:
+              schema:
+                type: string
+      security:
+        - httpBasicAuth: []
+  /api/Fallakte:
+    post:
+      tags:
+        - Fallakte
+      summary: Erstellt aus den übergebenen Metadaten eine neue Fallakte im enaio®
+      operationId: Fallakte_Post
+      requestBody:
+        x-name: fallakte
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Fallakte'
+        required: true
+        x-position: 1
+      responses:
+        '200':
+          description: Akte erfolgreich angelegt.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Fallakte'
+        '401':
+          description: Nicht autorisiert.
+          content:
+            application/json:
+              schema:
+                type: string
+        '409':
+          description: Akte bereits angelegt.
+          content:
+            application/json:
+              schema:
+                type: string
+        '500':
+          description: Fehler bei der Kommunikation mit enaio® aufgetreten
+          content:
+            application/json:
+              schema:
+                type: string
+      security:
+        - httpBasicAuth: []
+    put:
+      tags:
+        - Fallakte
+      summary: Aktualisiert eine Fallakte mit den übergebenen Metadaten
+      operationId: Fallakte_Put
+      requestBody:
+        x-name: fallakte
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Fallakte'
+        required: true
+        x-position: 1
+      responses:
+        '200':
+          description: Akte wurde aktualisiert.
+          content:
+            application/octet-stream:
+              schema:
+                type: string
+                format: binary
+        '204':
+          description: Akte wurde nicht gefunden.
+          content:
+            application/json:
+              schema:
+                type: string
+        '401':
+          description: Nicht autorisiert.
+          content:
+            application/json:
+              schema:
+                type: string
+        '500':
+          description: Fehler bei der Kommunikation mit enaio® aufgetreten
+          content:
+            application/json:
+              schema:
+                type: string
+      security:
+        - httpBasicAuth: []
+  '/api/Klientakte/{klientId}':
+    get:
+      tags:
+        - Klientakte
+      summary: Gibt anhand der klientID die zugehörige Klientakte aus dem enaio® zurück.
+      operationId: Klientakte_Get
+      parameters:
+        - name: klientId
+          in: path
+          required: true
+          schema:
+            type: string
+            nullable: true
+          x-position: 1
+      responses:
+        '200':
+          description: Die angeforderte Akte wurde gefunden.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Klientakte'
+        '204':
+          description: Angeforderte Akte existiert nicht.
+          content:
+            application/json:
+              schema:
+                type: string
+        '401':
+          description: Nicht autorisiert.
+          content:
+            application/json:
+              schema:
+                type: string
+        '500':
+          description: Fehler bei der Kommunikation mit enaio® aufgetreten
+          content:
+            application/json:
+              schema:
+                type: string
+      security:
+        - httpBasicAuth: []
+  /api/Klientakte:
+    post:
+      tags:
+        - Klientakte
+      summary: Erstellt aus den übergebenen Metadaten eine neue Klientakte im enaio®
+      operationId: Klientakte_Post
+      requestBody:
+        x-name: klientakte
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Klientakte'
+        required: true
+        x-position: 1
+      responses:
+        '200':
+          description: Akte erfolgreich angelegt.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Klientakte'
+        '401':
+          description: Nicht autorisiert.
+          content:
+            application/json:
+              schema:
+                type: string
+        '409':
+          description: Akte bereits angelegt.
+          content:
+            application/json:
+              schema:
+                type: string
+        '500':
+          description: Fehler bei der Kommunikation mit enaio® aufgetreten
+          content:
+            application/json:
+              schema:
+                type: string
+      security:
+        - httpBasicAuth: []
+    put:
+      tags:
+        - Klientakte
+      summary: Aktualisiert eine Klientakte mit den übergebenen Metadaten
+      operationId: Klientakte_Put
+      requestBody:
+        x-name: klientakte
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Klientakte'
+        required: true
+        x-position: 1
+      responses:
+        '200':
+          description: Akte wurde aktualisiert.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Klientakte'
+        '204':
+          description: Akte wurde nicht gefunden.
+          content:
+            application/json:
+              schema:
+                type: string
+        '401':
+          description: Nicht autorisiert.
+          content:
+            application/json:
+              schema:
+                type: string
+        '500':
+          description: Fehler bei der Kommunikation mit enaio® aufgetreten
+          content:
+            application/json:
+              schema:
+                type: string
+      security:
+        - httpBasicAuth: []
+components:
+  schemas:
+    FallakteDokument:
+      allOf:
+        - $ref: '#/components/schemas/Dokument'
+        - type: object
+          properties:
+            klient:
+              nullable: true
+              oneOf:
+                - $ref: '#/components/schemas/Klient'
+    Klient:
+      allOf:
+        - $ref: '#/components/schemas/PersonBaseExtended'
+        - type: object
+          properties:
+            adresse:
+              type: string
+              nullable: true
+    PersonBaseExtended:
+      allOf:
+        - $ref: '#/components/schemas/PersonBase'
+        - type: object
+          properties:
+            id:
+              type: string
+              nullable: true
+            geburtsdatum:
+              type: string
+              nullable: true
+    PersonBase:
+      type: object
+      description: ' '
+      properties:
+        vorname:
+          type: string
+          nullable: true
+        nachname:
+          type: string
+          nullable: true
+    DokumentPut:
+      type: object
+      properties:
+        eDokumentenID:
+          type: string
+          description: Eindeutige ID im enaio®
+          nullable: true
+        erstellungZeitpunkt:
+          type: string
+          nullable: true
+        typ:
+          type: string
+          nullable: true
+        vorlage:
+          type: string
+          nullable: true
+        sachbearbeiter:
+          nullable: true
+          oneOf:
+            - $ref: '#/components/schemas/Sachbearbeiter'
+        empfaenger:
+          nullable: true
+          oneOf:
+            - $ref: '#/components/schemas/Empfaenger'
+        prosozDateiname:
+          type: string
+          nullable: true
+        contentUrl:
+          type: string
+          description: URL unter welcher die Dokumentdatei abgerufen (GET) werden kann.
+          nullable: true
+    Dokument:
+      type: object
+      properties:
+        Fallakte.EAktenID:
+          type: string
+          description: Eindeutige ID im enaio®
+          nullable: true
+        File:
+          type: string
+          format: binary
+          nullable: true
+    Sachbearbeiter:
+      allOf:
+        - $ref: '#/components/schemas/PersonBase'
+        - type: object
+          properties:
+            kennung:
+              type: string
+              nullable: true
+    Empfaenger:
+      allOf:
+        - $ref: '#/components/schemas/PersonBase'
+        - type: object
+          properties:
+            adresse:
+              type: string
+              nullable: true
+    Fallakte:
+      type: object
+      properties:
+        eAktenID:
+          type: string
+          description: Eindeutige ID der Akte im enaio®
+          nullable: true
+        vorgang:
+          nullable: true
+          oneOf:
+            - $ref: '#/components/schemas/Vorgang'
+        antragssteller:
+          nullable: true
+          oneOf:
+            - $ref: '#/components/schemas/Antragssteller'
+        leistungsempfaenger:
+          nullable: true
+          oneOf:
+            - $ref: '#/components/schemas/Leistungsempfaenger'
+        unterhaltspflichtiger:
+          nullable: true
+          oneOf:
+            - $ref: '#/components/schemas/Unterhaltspflichtiger'
+    Vorgang:
+      type: object
+      properties:
+        aktenzeichen:
+          type: string
+          nullable: true
+        archivieren:
+          type: string
+          nullable: true
+        archivierenDatum:
+          type: string
+          nullable: true
+        bemerkung:
+          type: string
+          nullable: true
+        id:
+          type: string
+          nullable: true
+        loeschen:
+          type: string
+          nullable: true
+        loeschenDatum:
+          type: string
+          nullable: true
+        rechtsgebiet:
+          type: string
+          nullable: true
+        register:
+          type: string
+          nullable: true
+        zustaendigerSachbearbeiter:
+          type: string
+          nullable: true
+    Antragssteller:
+      allOf:
+        - $ref: '#/components/schemas/PersonBaseExtended'
+        - type: object
+    Leistungsempfaenger:
+      allOf:
+        - $ref: '#/components/schemas/PersonBaseExtended'
+        - type: object
+    Unterhaltspflichtiger:
+      allOf:
+        - $ref: '#/components/schemas/PersonBaseExtended'
+        - type: object
+    Klientakte:
+      type: object
+      properties:
+        eAktenID:
+          type: string
+          description: Eindeutige ID der Akte im enaio®
+          nullable: true
+        klient:
+          nullable: true
+          oneOf:
+            - $ref: '#/components/schemas/Klient'
+        archivieren:
+          type: string
+          nullable: true
+        archivierenDatum:
+          type: string
+          nullable: true
+        loeschen:
+          type: string
+          nullable: true
+        loeschenDatum:
+          type: string
+          nullable: true
+  securitySchemes:
+    httpBasicAuth:
+      type: http
+      scheme: basic
+      description: ''
+security:
+  - httpBasicAuth: []
