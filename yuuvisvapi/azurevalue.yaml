@@ -1,8 +1,0 @@
-serverurl: https://yuuvisapi.osvh.de
-tenant: prosozneo
-sslenabled: false
-apiport: 8080
-selfsignedcertificate: true
-keystorecn: yuuvisapi.tobbib.com
-keystorepath: yuuviskeystoremacpro.jks
-keystorepassword: secret

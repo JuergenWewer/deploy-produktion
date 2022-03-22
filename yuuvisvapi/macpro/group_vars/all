@@ -1,5 +1,0 @@
-installdir: $HOME/workspace/yuuvis
-exports: exports-macpro
-mountdirs: ./nfs/mountdirs-macpro
-pvs: persistentvolumes/pvs-macpro.yml
-pvsdir: ./playbooks/persistentvolumes/macpro

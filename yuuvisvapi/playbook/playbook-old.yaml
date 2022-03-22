@@ -1,2 +1,0 @@
-- name: Install yuuvis-v-api
-  import_tasks: ./api.yml
