@@ -1,0 +1,11 @@
+- hosts: localhost
+  tasks:
+    - name: Install kibana
+      kubernetes.core.helm:
+        name: kibana
+        namespace: kube-system
+        chart_ref: $HOME/workspace/elastichelmcharts/kibana
+        kubeconfig_path: "{{ kubeconfig }}"
+        create_namespace: True
+        wait: true
+#        values_files: $HOME/workspace/yuuvis/elk/elasticsearch/values1.yaml

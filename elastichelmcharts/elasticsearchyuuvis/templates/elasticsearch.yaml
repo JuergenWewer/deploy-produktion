@@ -1,0 +1,75 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: elasticsearch-master
+  labels:
+    app: elasticsearch-master
+    name: elasticsearch-master
+spec:
+  serviceName: elasticsearch-master
+  replicas: {{.Values.replicas}}
+  selector:
+    matchLabels:
+      name: elasticsearch-master
+      app: elasticsearch-master
+  template:
+    metadata:
+      labels:
+        name: elasticsearch-master
+        app: elasticsearch-master
+    spec:
+      securityContext:
+        fsGroup: 1000
+      initContainers:
+      - name: sysctl
+        image: busybox
+        imagePullPolicy: IfNotPresent
+        command: ["sysctl", "-w", "vm.max_map_count=262144"]
+        securityContext:
+          privileged: true
+      containers:
+      - name: elasticsearch-master
+        image: "{{ .Values.image }}:{{ .Values.imageTag }}"
+        imagePullPolicy: "{{ .Values.imagePullPolicy }}"
+        args:
+        - elasticsearch
+        - -E
+        - node.master=true
+        - -E
+        - node.data=true
+        - -E
+        - node.ingest=false
+        - -E
+        - discovery.seed_hosts={{.Values.initial_master_nodes}}
+        - -E
+        - cluster.initial_master_nodes={{.Values.initial_master_nodes}}
+        ports:
+        - containerPort: 9300
+          name: transport
+          protocol: TCP
+        - containerPort: 9200
+          name: http
+          protocol: TCP
+        env:
+        - name: "ES_JAVA_OPTS"
+          value: {{.Values.memory}}
+        - name: "ELASTIC_PASSWORD"
+          value: "optimal"
+        - name: "ELASTIC_USER"
+          value: "yuuvis"
+        - name: cluster.initial_master_nodes
+          value: {{.Values.initial_master_nodes}}
+        - name: xpack.security.enabled
+          value: "false"
+        volumeMounts:
+        - name: es-data
+          mountPath: /usr/share/elasticsearch/data
+  volumeClaimTemplates:
+  - metadata:
+      name: es-data
+    spec:
+      accessModes: [ "ReadWriteOnce" ]
+      resources:
+        requests:
+          storage: {{.Values.storage}}
+      storageClassName: {{.Values.storageClassName}}

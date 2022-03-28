@@ -1,0 +1,35 @@
+- hosts: localhost
+  tasks:
+    - name: Install elasticsearch
+      kubernetes.core.helm:
+        name: elasticsearch
+        namespace: kube-system
+        chart_ref: $HOME/workspace/elastichelmcharts/elasticsearchyuuvis
+        kubeconfig_path: "{{ kubeconfig }}"
+        create_namespace: True
+        wait: true
+    - name: Install logstash
+      kubernetes.core.helm:
+        name: logstash
+        namespace: kube-system
+        chart_ref: $HOME/workspace/elastichelmcharts/logstash
+        kubeconfig_path: "{{ kubeconfig }}"
+        create_namespace: True
+        wait: true
+        values_files: $HOME/workspace/elastichelmcharts/logstash/examples/elasticsearch/values.yaml
+    - name: Install kibana
+      kubernetes.core.helm:
+        name: kibana
+        namespace: kube-system
+        chart_ref: $HOME/workspace/elastichelmcharts/kibana
+        kubeconfig_path: "{{ kubeconfig }}"
+        create_namespace: True
+        wait: true
+    - name: Install filebeat
+      kubernetes.core.helm:
+        name: filebeat
+        namespace: kube-system
+        chart_ref: $HOME/workspace/elastichelmcharts/filebeat
+        kubeconfig_path: "{{ kubeconfig }}"
+        create_namespace: True
+        wait: true

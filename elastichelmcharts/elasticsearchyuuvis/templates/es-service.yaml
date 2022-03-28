@@ -1,0 +1,18 @@
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    name: elasticsearch-master
+  name: elasticsearch-master
+spec:
+  ports:
+  - name: "9300"
+    port: {{.Values.port}}
+    targetPort: {{.Values.targetPort}}
+  - name: "9200"
+    port: {{.Values.port2}}
+    targetPort: {{.Values.targetPort2}}
+  clusterIP: None
+  selector:
+    name: elasticsearch-master
+    app: elasticsearch-master

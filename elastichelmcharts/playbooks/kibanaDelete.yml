@@ -1,0 +1,10 @@
+- hosts: localhost
+  tasks:
+    - name: UnInstall kibana
+      kubernetes.core.helm:
+        name: kibana
+        state: absent
+        namespace: kube-system
+        chart_ref: $HOME/workspace/elastichelmcharts/kibana
+        kubeconfig_path: "{{ kubeconfig }}"
+        wait: true

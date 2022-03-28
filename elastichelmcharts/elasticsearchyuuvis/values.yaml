@@ -1,0 +1,15 @@
+---
+image: "docker.elastic.co/elasticsearch/elasticsearch"
+imageTag: "8.0.0"
+imagePullPolicy: "IfNotPresent"
+storage: 10Gi
+storageClassName: managed-nfs-raid-storage
+javaOpts: -Xms1024m -Xmx1024m
+replicas: 1
+port: 9300
+targetPort: 9300
+port2: 9200
+targetPort2: 9200
+nodes: 1
+initial_master_nodes: elasticsearch-master-0
+memory: -Xms1024m -Xmx1024m

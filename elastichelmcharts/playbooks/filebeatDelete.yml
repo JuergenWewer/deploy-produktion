@@ -1,0 +1,11 @@
+- hosts: localhost
+  tasks:
+    - name: UnInstall filebeat
+      kubernetes.core.helm:
+        name: filebeat
+        state: absent
+        namespace: kube-system
+        chart_ref: $HOME/workspace/elastichelmcharts/filebeat
+        kubeconfig_path: "{{ kubeconfig }}"
+        create_namespace: True
+        wait: true

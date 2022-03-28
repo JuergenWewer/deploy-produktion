@@ -1,0 +1,37 @@
+- name: delete secret
+  shell: kubectl delete --ignore-not-found=true secret elastic-config-credentials -n kube-system --kubeconfig={{ kubeconfig }}
+- name: create secret
+  shell: kubectl create secret generic elastic-config-credentials --from-literal=password=optimal --from-literal=username=yuuvis -n kube-system --kubeconfig={{ kubeconfig }}
+- name: Install elasticsearch
+  kubernetes.core.helm:
+    name: elasticsearch
+    namespace: kube-system
+    chart_ref: ../elastichelmcharts/elasticsearchyuuvis
+    kubeconfig_path: "{{ kubeconfig }}"
+    create_namespace: True
+    wait: true
+- name: Install logstash
+  kubernetes.core.helm:
+    name: logstash
+    namespace: kube-system
+    chart_ref: ../elastichelmcharts/logstash
+    kubeconfig_path: "{{ kubeconfig }}"
+    create_namespace: True
+    wait: true
+    values_files: ../elastichelmcharts/logstash/examples/elasticsearch/values.yaml
+- name: Install kibana
+  kubernetes.core.helm:
+    name: kibana
+    namespace: kube-system
+    chart_ref: ../elastichelmcharts/kibana
+    kubeconfig_path: "{{ kubeconfig }}"
+    create_namespace: True
+    wait: true
+- name: Install filebeat
+  kubernetes.core.helm:
+    name: filebeat
+    namespace: kube-system
+    chart_ref: ../elastichelmcharts/filebeat
+    kubeconfig_path: "{{ kubeconfig }}"
+    create_namespace: True
+    wait: true

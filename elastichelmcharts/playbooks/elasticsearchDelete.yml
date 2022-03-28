@@ -1,0 +1,11 @@
+- hosts: localhost
+  tasks:
+    - name: UnInstall elasticsearch
+      kubernetes.core.helm:
+        name: elasticsearch
+        state: absent
+        namespace: kube-system
+        chart_ref: $HOME/workspace/elastichelmcharts/elasticsearch
+        kubeconfig_path: "{{ kubeconfig }}"
+        create_namespace: True
+        wait: true

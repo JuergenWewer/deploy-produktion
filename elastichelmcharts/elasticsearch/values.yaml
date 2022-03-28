@@ -1,0 +1,95 @@
+---
+clusterName: "elasticsearch"
+nodeGroup: "master"
+
+# The service that non master groups will try to connect to when joining the cluster
+# This should be set to clusterName + "-" + nodeGroup for your master group
+masterService: ""
+
+roles:
+  - master
+  - data
+  - data_content
+  - data_hot
+  - data_warm
+  - data_cold
+  - ingest
+  - ml
+  - remote_cluster_client
+  - transform
+
+replicas: 2
+minimumMasterNodes: 2
+
+# Permit co-located instances for solitary minikube virtual machines.
+antiAffinity: "soft"
+
+# Shrink default JVM heap.
+esJavaOpts: "-Xmx128m -Xms128m"
+
+# Allocate smaller chunks of memory per pod.
+resources:
+  requests:
+    cpu: "100m"
+    memory: "512M"
+  limits:
+    cpu: "1000m"
+    memory: "512M"
+
+# Request smaller persistent volumes.
+volumeClaimTemplate:
+  accessModes: [ "ReadWriteOnce" ]
+  storageClassName: "managed-nfs-raid-storage"
+  resources:
+    requests:
+      storage: 100M
+
+tests:
+  enabled: false
+
+#elasticsearch:
+esMajorVersion: ""
+
+image: "docker.elastic.co/elasticsearch/elasticsearch"
+imageTag: "8.0.0-SNAPSHOT"
+imagePullPolicy: "IfNotPresent"
+
+persistence:
+  enabled: true
+  labels:
+    # Add default labels for the volumeClaimTemplate of the StatefulSet
+    enabled: false
+  annotations: {}
+
+rbac:
+  create: false
+  serviceAccountAnnotations: {}
+  serviceAccountName: ""
+  automountToken: true
+
+sysctlInitContainer:
+  enabled: true
+
+# Disable it to use your own elastic-credential Secret.
+secret:
+  enabled: false
+  password: "" # generated randomly if not defined
+
+service:
+  enabled: true
+
+podSecurityPolicy:
+  create: false
+
+networkPolicy:
+  http:
+    enabled: false
+  transport:
+    enabled: false
+
+ingress:
+  enabled: false
+
+nameOverride: ""
+fullnameOverride: ""
+healthNameOverride: ""
