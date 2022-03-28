@@ -1,9 +1,0 @@
-serverurl: http://192.168.178.77
-serverport: 30036
-tenant: yuuvistest
-sslenabled: true
-apiport: 443
-selfsignedcertificate: true
-keystorecn: 192.168.178.77
-keystorepath: yuuviskeystoremacpro.jks
-keystorepassword: secret
