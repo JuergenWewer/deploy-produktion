@@ -1,0 +1,4 @@
+---
+- name: Dummy Task in deployment
+  debug:
+    msg: "helle World"
