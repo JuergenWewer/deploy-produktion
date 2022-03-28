@@ -1,0 +1,8 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: yuuvisapiconfigmap
+  namespace: yuuvis
+data:
+  tenant: '{{ .Values.tenant }}'
+  serverurl: '{{ .Values.serverurl }}{{ if .Values.serverport }}:{{ .Values.serverport }}{{ end }}'
