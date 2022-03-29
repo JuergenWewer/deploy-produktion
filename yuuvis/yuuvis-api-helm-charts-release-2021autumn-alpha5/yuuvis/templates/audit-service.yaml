@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: {{.Values.yuuvis.labels.app}}
+    name: audit
+    yuuvis: "true"
+  name: audit
+spec:
+  ports:
+  - name: "http"
+    port: 80
+    targetPort: {{.Values.yuuvis.services.audit.port}}
+  selector:
+    name: audit
+  type: ClusterIP

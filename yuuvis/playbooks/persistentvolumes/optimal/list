@@ -1,0 +1,5 @@
+./playbooks/persistentvolumes/optimal/pv-es.yml
+./playbooks/persistentvolumes/optimal/pv-gg.yml
+./playbooks/persistentvolumes/optimal/pv-mi.yml
+./playbooks/persistentvolumes/optimal/pv-mq.yml
+./playbooks/persistentvolumes/optimal/pv-pg.yml
