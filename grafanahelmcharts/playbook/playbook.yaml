@@ -1,2 +1,0 @@
-- name: Install grafana
-  import_tasks: ./grafana.yml
