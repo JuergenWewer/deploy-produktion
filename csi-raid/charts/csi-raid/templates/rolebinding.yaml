@@ -1,0 +1,16 @@
+{{- if .Values.rbac.create }}
+kind: RoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  labels:
+    {{- include "csi-raid.labels" . | nindent 4 }}
+  name: leader-locking-{{ template "csi-raid.fullname" . }}
+subjects:
+  - kind: ServiceAccount
+    name: {{ template "csi-raid.serviceAccountName" . }}
+    namespace: {{ .Release.Namespace }}
+roleRef:
+  kind: Role
+  name: leader-locking-{{ template "csi-raid.fullname" . }}
+  apiGroup: rbac.authorization.k8s.io
+{{- end }}

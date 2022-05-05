@@ -1,0 +1,19 @@
+{{ if .Values.nfs.mountOptions -}}
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: pvc-{{ template "csi-raid.fullname" . }}
+  labels:
+    {{- include "csi-raid.labels" . | nindent 4 }}
+spec:
+  accessModes:
+    - {{ .Values.storageClass.accessModes }}
+  volumeMode: Filesystem
+  storageClassName: ""
+  selector:
+    matchLabels:
+      csi-raid: {{ template "csi-raid.fullname" . }}
+  resources:
+    requests:
+      storage: 10Mi
+{{ end -}}
