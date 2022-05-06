@@ -1,0 +1,2 @@
+- name: Install dynamic storage provisioner
+  import_tasks: ../csi-raid/playbook/DRdynamicStorageProvisioner.yml

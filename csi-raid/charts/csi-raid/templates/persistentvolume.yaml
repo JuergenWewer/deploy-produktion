@@ -1,0 +1,26 @@
+{{ if .Values.nfs.mountOptions -}}
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: pv-{{ template "csi-raid.fullname" . }}
+  labels: 
+    {{- include "csi-raid.labels" . | nindent 4 }}
+    csi-raid: {{ template "csi-raid.fullname" . }}
+spec:
+  capacity:
+    storage: 10Mi
+  volumeMode: Filesystem
+  accessModes:
+    - {{ .Values.storageClass.accessModes }}
+  persistentVolumeReclaimPolicy: {{ .Values.nfs.reclaimPolicy }}
+  storageClassName: ""
+  {{- if .Values.nfs.mountOptions }}
+  mountOptions:
+    {{- range .Values.nfs.mountOptions }}
+    - {{ . }}
+    {{- end }}
+  {{- end }}
+  nfs:
+    server: {{ .Values.nfs.server }}
+    path: {{ .Values.nfs.path }}
+{{ end -}}
