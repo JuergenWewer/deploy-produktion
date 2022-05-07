@@ -1,0 +1,16 @@
+{{- if .Values.rbac.create }}
+kind: ClusterRoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  labels:
+    {{- include "csi-raid.labels" . | nindent 4 }}
+  name: run-{{ template "csi-raid.fullname" . }}
+subjects:
+  - kind: ServiceAccount
+    name: {{ template "csi-raid.serviceAccountName" . }}
+    namespace: {{ .Release.Namespace }}
+roleRef:
+  kind: ClusterRole
+  name: {{ template "csi-raid.fullname" . }}-runner
+  apiGroup: rbac.authorization.k8s.io
+{{- end }}

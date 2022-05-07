@@ -1,0 +1,32 @@
+---
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: blob
+provisioner: blob.csi.azure.com
+parameters:
+  csi.storage.k8s.io/provisioner-secret-name: azure-nfs3-secret
+  csi.storage.k8s.io/provisioner-secret-namespace: kube-system
+  csi.storage.k8s.io/node-stage-secret-name: azure-nfs3-secret
+  csi.storage.k8s.io/node-stage-secret-namespace: kube-system
+mountOptions:
+#  - -o gid=1001
+#  - -o uid=1001
+  - -o allow_other
+#  - --tmp-path=/mnt
+#  - --file-cache-timeout-in-seconds=120
+#  - --use-attr-cache=true
+
+#  - --max-concurrency=40
+#  - --max-retry-interval-in-seconds=2
+#  - --background-download=true
+#  - --invalidate-on-sync=true
+#  - --stream-cache-mb=1000
+#  - --block-size-mb=64
+
+#  - --cancel-list-on-mount-seconds=120  # prevent billing charges on mounting
+  - -o attr_timeout=120
+  - -o entry_timeout=120
+#  - -o negative_timeout=120
+#  - --log-level=LOG_DEBUG  # LOG_WARNING, LOG_INFO, LOG_DEBUG
+#  - --cache-size-mb=1000  # Default will be 80% of available memory, eviction will happen beyond that.
