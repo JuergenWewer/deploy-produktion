@@ -1,0 +1,33 @@
+{
+  "vorgang": {
+    "aktenzeichen": "0000009",
+    "archivieren": "false",
+    "archivierenDatum": "",
+    "bemerkung": "",
+    "id": "a8dd0bce-8335-4665-939c-987e300a0644",
+    "loeschen": "false",
+    "loeschenDatum": "",
+    "rechtsgebiet": "",
+    "register": "",
+    "zustaendigerSachbearbeiter": "Roland Renntaler"
+  },
+  "antragssteller": {
+    "id": "c00fedf5-5b48-4460-87f3-d8beba6c4e30",
+    "vorname": "Rina",
+    "nachname": "Xtremepyrd",
+    "geburtsdatum": "01.01.1979"
+  },
+  "leistungsempfaenger": {
+    "id": "9d0b0618-c3ed-4cb2-97b1-663c320814fa",
+    "vorname": "Hans",
+    "nachname": "Xtremepyrd",
+    "geburtsdatum": "31.03.2021"
+  },
+  "unterhaltspflichtiger": {
+    "id": "c40699a4-4dba-457d-bd8c-c55930e46671",
+    "vorname": "Rainer",
+    "nachname": "Xtremepyrd",
+    "geburtsdatum": "01.01.1968"
+  },
+  "eaktenID": ""
+}

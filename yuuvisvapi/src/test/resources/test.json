@@ -1,0 +1,59 @@
+{
+  "objects": [
+    {
+      "properties": {
+        "system:objectId": {
+          "value": "24f92923-d3ad-4948-8635-7bc6f3fcbba0"
+        },
+        "system:baseTypeId": {
+          "value": "system:folder"
+        },
+        "system:objectTypeId": {
+          "value": "tenProsozneo:klientakteneo"
+        },
+        "system:secondaryObjectTypeIds": {
+          "value": [
+            "appClientsystem:leadingType",
+            "appClient:clientdefaults"
+          ]
+        },
+        "system:createdBy": {
+          "value": "4066842b-4915-404a-a103-0d9fbe70a0c5"
+        },
+        "system:creationDate": {
+          "value": "2022-04-04T05:23:25.820Z"
+        },
+        "system:lastModifiedBy": {
+          "value": "4066842b-4915-404a-a103-0d9fbe70a0c5"
+        },
+        "system:lastModificationDate": {
+          "value": "2022-04-04T05:23:25.820Z"
+        },
+        "system:versionNumber": {
+          "value": 1
+        },
+        "system:tenant": {
+          "value": "prosozneo"
+        },
+        "system:traceId": {
+          "value": "3ba0098334bfc57f"
+        },
+        "tenProsozneo:archivieren": {
+          "value": false
+        },
+        "tenProsozneo:loeschen": {
+          "value": false
+        },
+        "appClientsystem:leadingTypeId": {
+          "value": "tenProsozneo:klientakteneo"
+        },
+        "appClient:clienttitle": {
+          "value": "ClientTitle"
+        },
+        "appClient:clientdescription": {
+          "value": "clientDescription"
+        }
+      }
+    }
+  ]
+}

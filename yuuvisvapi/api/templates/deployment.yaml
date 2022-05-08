@@ -1,0 +1,86 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: yuuvis-api
+  namespace: yuuvis
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: yuuvis-api
+  template:
+    metadata:
+      labels:
+        app: yuuvis-api
+    spec:
+      containers:
+      - name: yuuvis-api
+        image: jw-cloud.org:8443/yuuvis-v-api:3.0.19-SNAPSHOT
+        ports:
+        - containerPort: {{ .Values.apiport }}
+        env:
+          - name: TENANT
+            valueFrom:
+              configMapKeyRef:
+                name: yuuvisapiconfigmap
+                key: tenant
+          - name: SERVERURL
+            valueFrom:
+              configMapKeyRef:
+                name: yuuvisapiconfigmap
+                key: serverurl
+          - name: USER
+            valueFrom:
+              secretKeyRef:
+                name: yuuvissecret
+                key: username
+          - name: PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: yuuvissecret
+                key: password
+          - name: YUUVISUSER
+            valueFrom:
+              secretKeyRef:
+                name: yuuvissecret
+                key: yuuvisusername
+          - name: YUUVISPASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: yuuvissecret
+                key: yuuvispassword
+          - name: SSLENABLED
+            valueFrom:
+              secretKeyRef:
+                name: yuuvissecret
+                key: sslenabled
+          - name: SELFSIGNEDCERTIFICATE
+            valueFrom:
+              secretKeyRef:
+                name: yuuvissecret
+                key: selfsignedcertificate
+          - name: KEYSTORECN
+            valueFrom:
+              secretKeyRef:
+                name: yuuvissecret
+                key: keystorecn
+          - name: KEYSTOREPATH
+            valueFrom:
+              secretKeyRef:
+                name: yuuvissecret
+                key: keystorepath
+          - name: KEYSTOREPASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: yuuvissecret
+                key: keystorepassword
+        volumeMounts:
+        - name: config-volume
+          mountPath: /src/main/resources/dist/openapi3.yaml
+          subPath: openapi3.yaml
+      volumes:
+        - name: config-volume
+          configMap:
+            name: openapi-configmap
+      imagePullSecrets:
+        - name: jwcloudcred

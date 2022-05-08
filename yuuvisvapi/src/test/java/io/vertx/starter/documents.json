@@ -1,0 +1,203 @@
+{
+  "objects": [
+    {
+      "properties": {
+        "system:traceId": {
+          "value": "0acf2aa8aa90b8a2"
+        },
+        "tenYuuvistest:erstelldatum": {
+          "value": "2021-02-18"
+        },
+        "system:parentObjectTypeId": {
+          "value": "tenYuuvistest:klientakteneo"
+        },
+        "tenYuuvistest:vornamesachbearbeiter": {
+          "value": "Dokument.Sachbearbeiter.Vorname"
+        },
+        "tenYuuvistest:nachnamesachbearbeiter": {
+          "value": "Dokument.Sachbearbeiter.Nachname"
+        },
+        "tenYuuvistest:vorlage": {
+          "value": "Dokument.Vorlage"
+        },
+        "appClient:clienttitle": {
+          "value": "Dokument.Sachbearbeiter.Vorname, Dokument.Sachbearbeiter.Nachname"
+        },
+        "tenYuuvistest:dokumenttyp": {
+          "value": "Dokument.Typ"
+        },
+        "system:creationDate": {
+          "value": "2021-06-30T07:50:49.360Z"
+        },
+        "tenYuuvistest:nachnameempfaenger": {
+          "value": "Dokument.Empfaenger.Nachname"
+        },
+        "system:lastModificationDate": {
+          "value": "2021-06-30T07:50:49.360Z"
+        },
+        "system:parentId": {
+          "value": "e03a20cd-23f4-4b7d-81fb-6013858255a8"
+        },
+        "tenYuuvistest:kennungsachbearbeiter": {
+          "value": "Dokument.Sachbearbeiter.Kennung"
+        },
+        "appClient:clientdescription": {
+          "value": "Dokument.ProsozDateiname"
+        },
+        "system:baseTypeId": {
+          "value": "system:document"
+        },
+        "system:lastModifiedBy": {
+          "value": "d90b12d5-1288-4a73-92fc-d9b6872df812"
+        },
+        "system:objectTypeId": {
+          "value": "tenYuuvistest:klientakteneodokument"
+        },
+        "system:secondaryObjectTypeIds": {
+          "value": [
+            "appClientsystem:leadingType",
+            "appClient:clientdefaults"
+          ]
+        },
+        "tenYuuvistest:edokumentenid": {
+          "value": "PDF-Lizenz"
+        },
+        "system:versionNumber": {
+          "value": 1
+        },
+        "tenYuuvistest:kennungempfaenger": {
+          "value": "Dokument.Empfaenger.Adresse"
+        },
+        "system:createdBy": {
+          "value": "d90b12d5-1288-4a73-92fc-d9b6872df812"
+        },
+        "tenYuuvistest:dateiname": {
+          "value": "Dokument.ProsozDateiname"
+        },
+        "system:tenant": {
+          "value": "yuuvistest"
+        },
+        "tenYuuvistest:registertyp": {
+          "value": "Klientakte.OrdnerObjektTypName"
+        },
+        "tenYuuvistest:vornameempfaenger": {
+          "value": "Dokument.Empfaenger.Vorname"
+        },
+        "system:objectId": {
+          "value": "0754c6ed-fa4c-40a4-823b-dad758e6ccbe"
+        }
+      },
+      "contentStreams": [
+        {
+          "contentStreamId": "E2B5747F-D977-11EB-A912-BBA42E2F090D",
+          "length": 78824,
+          "mimeType": "application/pdf",
+          "fileName": "Lizenz",
+          "digest": "98CDC35D9B56184DC04FA005E1DD58C2B04158F39C2615C48984617227FA24F5",
+          "repositoryId": "s3"
+        }
+      ]
+    },
+    {
+      "properties": {
+        "system:traceId": {
+          "value": "de662d9ff0e48861"
+        },
+        "tenYuuvistest:erstelldatum": {
+          "value": "2021-02-18"
+        },
+        "system:parentObjectTypeId": {
+          "value": "tenYuuvistest:klientakteneo"
+        },
+        "tenYuuvistest:vornamesachbearbeiter": {
+          "value": "Dokument.Sachbearbeiter.Vorname"
+        },
+        "tenYuuvistest:nachnamesachbearbeiter": {
+          "value": "Dokument.Sachbearbeiter.Nachname"
+        },
+        "tenYuuvistest:vorlage": {
+          "value": "Dokument.Vorlage"
+        },
+        "appClient:clienttitle": {
+          "value": "Dokument.Sachbearbeiter.Vorname, Dokument.Sachbearbeiter.Nachname"
+        },
+        "tenYuuvistest:dokumenttyp": {
+          "value": "Dokument.Typ"
+        },
+        "system:creationDate": {
+          "value": "2021-06-29T09:27:04.140Z"
+        },
+        "tenYuuvistest:nachnameempfaenger": {
+          "value": "Dokument.Empfaenger.Nachname"
+        },
+        "system:lastModificationDate": {
+          "value": "2021-06-29T09:27:04.140Z"
+        },
+        "system:parentId": {
+          "value": "e03a20cd-23f4-4b7d-81fb-6013858255a8"
+        },
+        "tenYuuvistest:kennungsachbearbeiter": {
+          "value": "Dokument.Sachbearbeiter.Kennung"
+        },
+        "appClient:clientdescription": {
+          "value": "Dokument.ProsozDateiname"
+        },
+        "system:baseTypeId": {
+          "value": "system:document"
+        },
+        "system:lastModifiedBy": {
+          "value": "d90b12d5-1288-4a73-92fc-d9b6872df812"
+        },
+        "system:objectTypeId": {
+          "value": "tenYuuvistest:klientakteneodokument"
+        },
+        "system:secondaryObjectTypeIds": {
+          "value": [
+            "appClientsystem:leadingType",
+            "appClient:clientdefaults"
+          ]
+        },
+        "tenYuuvistest:edokumentenid": {
+          "value": "PDF-Lizenz"
+        },
+        "system:versionNumber": {
+          "value": 1
+        },
+        "tenYuuvistest:kennungempfaenger": {
+          "value": "Dokument.Empfaenger.Adresse"
+        },
+        "system:createdBy": {
+          "value": "d90b12d5-1288-4a73-92fc-d9b6872df812"
+        },
+        "tenYuuvistest:dateiname": {
+          "value": "Dokument.ProsozDateiname"
+        },
+        "system:tenant": {
+          "value": "yuuvistest"
+        },
+        "tenYuuvistest:registertyp": {
+          "value": "Klientakte.OrdnerObjektTypName"
+        },
+        "tenYuuvistest:vornameempfaenger": {
+          "value": "Dokument.Empfaenger.Vorname"
+        },
+        "system:objectId": {
+          "value": "217194b7-7dca-47d0-9bf4-41b57f6d3c5e"
+        }
+      },
+      "contentStreams": [
+        {
+          "contentStreamId": "2A53ADB7-D8BC-11EB-A912-CD16CB432E27",
+          "length": 78824,
+          "mimeType": "application/pdf",
+          "fileName": "Lizenz",
+          "digest": "98CDC35D9B56184DC04FA005E1DD58C2B04158F39C2615C48984617227FA24F5",
+          "repositoryId": "s3"
+        }
+      ]
+    }
+  ],
+  "numItems": 2,
+  "hasMoreItems": false,
+  "totalNumItems": 2
+}

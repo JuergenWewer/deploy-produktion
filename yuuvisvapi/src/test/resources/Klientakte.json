@@ -1,0 +1,14 @@
+{
+  "klient": {
+    "id": "c00fedf5-5b48-4460-87f3-d8beba6c4e30",
+    "vorname": "Rina",
+    "nachname": "Xtremepyrd",
+    "geburtsdatum": "01.01.1979",
+    "adresse": ""
+  },
+  "archivieren": "false",
+  "archivierenDatum": "",
+  "loeschen": "false",
+  "loeschenDatum": "",
+  "eaktenID": ""
+}
