@@ -1,2 +1,0 @@
-- name: Install infrastructure and waiting suppression ending
-  import_tasks: ../yuuvis/playbooks/DRupdateTask.yml

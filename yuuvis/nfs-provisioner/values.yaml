@@ -1,4 +1,0 @@
-nfsProvisioner:
-  nfsServer:
-    ip: 192.168.178.77
-    path: /mnt/optimal
