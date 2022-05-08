@@ -1,0 +1,55 @@
+{
+  "objects": [{
+    "properties": {
+      "system:objectTypeId": {
+        "value": "tenYuuvistest:fallakteneo"
+      },
+      "clienttitle": {
+        "value": "clienttitlevalue"
+      },
+      "clientdescription": {
+        "value": "clientdescriptionvalue"
+      },
+      "aktenzeichen": {
+        "value": "aktenzeichenvalue"
+      },
+      "sachbearbeiter": {
+        "value": "sachbearbeitervalue"
+      },
+      "vorgangsid": {
+        "value": "vorgangsidvalue"
+      },
+      "rechtsgebiet": {
+        "value": "rechtsgebietvalue"
+      },
+      "vorname": {
+        "value": "vornamevalue"
+      },
+      "nachname": {
+        "value": "nachnamevalue"
+      },
+      "geburtsdatum": {
+        "value": "geburtsdatumvalue"
+      },
+      "id": {
+        "value": "idvalue"
+      },
+      "archivdatum": {
+        "value": "archivdatumvalue"
+      },
+      "loeschdatum": {
+        "value": "loeschdatumvalue"
+      },
+      "archivieren": {
+        "value": "archivierenvalue"
+      },
+      "loeschen": {
+        "value": "loeschenvalue"
+      },
+      "Bemerkung": {
+        "value": "Bemerkungvalue"
+      }
+    }
+  }
+  ]
+}

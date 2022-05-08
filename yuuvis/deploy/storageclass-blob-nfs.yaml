@@ -1,0 +1,8 @@
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: blob-nfs
+provisioner: blob.csi.azure.com
+parameters:
+  protocol: nfs
+  storageAccount: azurenfs3cloadstorage

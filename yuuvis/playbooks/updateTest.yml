@@ -1,0 +1,38 @@
+---
+- hosts: localhost
+  vars:
+    helm_chart_url: "https://charts.bitnami.com/bitnami"
+  tasks:
+    - name: Add helm repo
+      kubernetes.core.helm_repository:
+        name: bitnami
+        repo_url: "{{ helm_chart_url }}"
+    - name: Install Nginx Chart
+      kubernetes.core.helm:
+        name: nginx-server
+        namespace: testing
+        chart_ref: bitnami/nginx
+        create_namespace: True
+    - name: Install postgresql Chart
+      kubernetes.core.helm:
+        name: postgresql
+        namespace: testing
+        chart_ref: bitnami/postgresql
+        create_namespace: True
+        wait: true
+        values:
+          postgresql:
+            postgresqlPassword: "{{ postgresqlPassword }}"
+            persistence:
+              storageClass: "{{ postgresqlpersistencestorageClass }}"
+              size: "{{ postgresqlpersistencesize }}"
+            volumePermissions:
+              securityContext:
+                runAsUser: "auto"
+            securityContext:
+              enabled: false
+            containerSecurityContext:
+              enabled: false
+            shmVolume:
+              chmod:
+                enabled: false

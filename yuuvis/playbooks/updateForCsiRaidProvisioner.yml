@@ -1,0 +1,6 @@
+- hosts: localhost
+  tasks:
+    - name: Install dynamic storage provisioner
+      import_tasks: ./dynamicStorageProvisioner.yml
+    - name: Install infrastructure and waiting suppression ending
+      import_tasks: ./updateTask.yml

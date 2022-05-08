@@ -1,0 +1,5 @@
+./playbooks/persistentvolumes/macpro/pv-es.yml
+./playbooks/persistentvolumes/macpro/pv-gg.yml
+./playbooks/persistentvolumes/macpro/pv-mi.yml
+./playbooks/persistentvolumes/macpro/pv-mq.yml
+./playbooks/persistentvolumes/macpro/pv-pg.yml

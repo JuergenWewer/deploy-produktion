@@ -1,0 +1,67 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+  labels:
+    app: {{.Values.yuuvis.labels.app}}
+    name: tenant-management
+  name: tenant-management
+spec:
+  replicas: {{.Values.yuuvis.apitm.instances}}
+  selector:
+    matchLabels:
+      name: tenant-management
+  template:
+    metadata:
+      labels:
+        name: tenant-management
+    spec:
+      initContainers:
+      - name: init-api-tm
+        image: busybox
+        command: ["sh", "-c", "{{.Values.initContainer.command}}"]
+        imagePullPolicy: IfNotPresent
+      containers:
+      - env:
+        - name: JAVA_OPTS
+          value: {{.Values.yuuvis.apitm.java.maxHeap}}
+        - name: SPRING_CLOUD_CONFIG_URI
+          value: {{ .Values.yuuvis.configservice.url }}
+        - name: SPRING_PROFILES_ACTIVE
+          value: {{.Values.yuuvis.apitm.profiles}}
+        - name: CLIENT_ROOTURL
+          value: {{.Values.yuuvis.apitm.client.rooturl}}
+        image: "{{.Values.yuuvis.apitm.dockerImage }}"
+        imagePullPolicy: {{.Values.yuuvis.image.imagePullPolicy}}
+        {{- if .Values.yuuvis.livenessProbe.enable }}
+        livenessProbe:
+          httpGet:
+            path: {{.Values.yuuvis.livenessProbe.path }}
+            port: 7560
+          initialDelaySeconds: {{.Values.yuuvis.livenessProbe.initialDelaySeconds }}
+          periodSeconds: {{.Values.yuuvis.livenessProbe.periodSeconds }}
+          timeoutSeconds: {{.Values.yuuvis.livenessProbe.timeoutSeconds }}
+        {{- end}}
+        {{- if .Values.yuuvis.readinessProbe.enable }}
+        readinessProbe:
+          httpGet:
+            path: {{.Values.yuuvis.readinessProbe.path }}
+            port: 7560
+          initialDelaySeconds: {{.Values.yuuvis.readinessProbe.initialDelaySeconds }}
+          periodSeconds: {{.Values.yuuvis.readinessProbe.periodSeconds }}
+          timeoutSeconds: {{.Values.yuuvis.readinessProbe.timeoutSeconds }}
+        {{- end}}
+        name: tenant-management
+        ports:
+        - containerPort: 7560
+          protocol: TCP
+        {{- if .Values.yuuvis.apitm.volumeMounts }}
+        volumeMounts:
+{{ tpl .Values.yuuvis.apitm.volumeMounts . | indent 8 }}
+        {{- end }}
+      imagePullSecrets:
+      - name: {{.Values.yuuvis.image.imagePullSecret}}
+      {{- if .Values.yuuvis.apitm.volumes }}
+      volumes:
+{{ tpl .Values.yuuvis.apitm.volumes . | indent 6 }}
+      {{- end}}

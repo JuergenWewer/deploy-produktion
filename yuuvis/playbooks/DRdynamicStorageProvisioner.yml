@@ -1,0 +1,14 @@
+- name: Install dynamic storage provisioner
+  kubernetes.core.helm:
+    name: dynamicstorageprovisioner
+    namespace: kube-system
+    chart_ref: ../yuuvis/dynamic-storage-provisioner
+    kubeconfig_path: "{{ kubeconfig }}"
+    create_namespace: True
+    wait: true
+    values:
+      csiraid:
+        nfs:
+          server: "{{ nfsserver }}"
+          secret: "{{ nfssecret }}"
+          backup: "{{ nfsbackup }}"
